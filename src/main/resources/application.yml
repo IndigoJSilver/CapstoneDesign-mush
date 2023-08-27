@@ -1,0 +1,54 @@
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: TRACE
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://capstonedesign.ct7im4wk1v9m.ap-northeast-2.rds.amazonaws.com:3306/CapstoneDesign?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
+    password: "*Capdi5141"
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: deb3f5713cecbd48874d6fdd50c35ce9
+            client-secret: bjI5Bkp4a0MjkYfwhkLVAOqSYZWAhW85
+            redirect-uri: https://localhost:4000/api/users/oauth2/login
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+            client-name: Kakao
+
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/users
+            user-name-attribute: id
+jwt:
+  secretKey: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+  access:
+    expiration: 1800000 # 30분
+    header: Authorization
+
+  refresh:
+    expiration: 2419200000 # 4주
+server:
+  port: 1000
