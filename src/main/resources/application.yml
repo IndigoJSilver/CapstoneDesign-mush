@@ -27,7 +27,7 @@ spring:
           kakao:
             client-id: 
             
-            redirect-uri: https://localhost:4000/api/users/oauth2/login
+            redirect-uri: https://localhost:1000/users/oauth2/login
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             scope:
