@@ -59,34 +59,7 @@ public class CommentController {
     public void deleteComment(@PathVariable Long userId, @PathVariable Long boardId) {
         commentService.deleteComment(userId, boardId);
     }
-
-    // 답글 등록
-    @PostMapping("/{pardentId}/{boardId}")
-    public ApiResult<Long> writeReply(@PathVariable Long pardentId, @PathVariable Long boardId, @RequestBody CommentWriteDto commentWriteDto) {
-        try {
-            return ApiResult.success(commentService.writeComment(pardentId, boardId, commentWriteDto));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ApiResult.fail(e.getMessage());
-        }
-    }
-
-    // 답글 수정
-    @PutMapping("/{parentId}/{boardId}")
-    public ApiResult<Long> updateReply(@PathVariable Long parentId, @PathVariable Long boardId, @RequestBody CommentWriteDto commentWriteDto) {
-        try {
-            return ApiResult.success(commentService.updateComment(parentId, boardId, commentWriteDto));
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return ApiResult.fail(e.getMessage());
-        }
-    }
-
-    // 답글 삭제
-    @DeleteMapping("/{parentId}/{boardId}")
-    public void deleteReply(@PathVariable Long parentId, @PathVariable Long boardId) {
-        commentService.deleteComment(parentId, boardId);
-    }
+    
 
 
 }
