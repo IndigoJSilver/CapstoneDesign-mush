@@ -27,7 +27,7 @@ spring:
           kakao:
             client-id: 
             
-            redirect-uri: https://localhost:1000/users/oauth2/login
+            
             client-authentication-method: POST
             authorization-grant-type: authorization_code
             scope:
@@ -50,5 +50,15 @@ jwt:
 
   refresh:
     expiration: 2419200000 # 4주
+    header: refreshToken
+#server:
+#  ssl:
+#    enabled: true
+#    key-alias: tomcat
+#    key-password: "18**tlwlsvld"
+#    key-store: /Users/jinislab/tomcat.keystore
+#    key-store-provider: SUN
+#    key-store-type: JKS
+#    key-store-password: "18**tlwlsvld"
 server:
   port: 1000
