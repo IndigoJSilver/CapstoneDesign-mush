@@ -59,7 +59,7 @@ public class CommentController {
     public void deleteComment(@PathVariable Long userId, @PathVariable Long boardId) {
         commentService.deleteComment(userId, boardId);
     }
-    
+
 
 
 }

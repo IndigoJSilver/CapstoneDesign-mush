@@ -9,10 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 
 @Slf4j
@@ -38,6 +43,21 @@ public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                     user.updateRefreshToken(refreshToken);
                     userRepository.saveAndFlush(user);
                 });
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        JSONObject jsonResponse = new JSONObject();
+        jsonResponse.put("message", "로그인에 성공하였습니다.");
+        jsonResponse.put("accessToken", accessToken);
+        jsonResponse.put("refreshToken", refreshToken);
+        jsonResponse.put("email", email);
+
+        try {
+            response.getWriter().write(jsonResponse.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         log.info("로그인에 성공하였습니다. 이메일: {}", email);
         log.info("로그인에 성공하였습니다. AccessToken: {}", accessToken);
         log.info("로그인에 성공하였습니다. RefreshToken: {}", refreshToken);
