@@ -28,7 +28,7 @@ import java.io.IOException;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String NO_CHECK_URL = "/login";
+    private static final String NO_CHECK_URL = "/api/users/login";
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -56,6 +56,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * refreshtoken으로 유저 정보 찾기, accesstoken/refreshtoken 재발급
+     * @param response
+     * @param refreshToken
+     */
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
         userRepository.findByRefreshToken(refreshToken)
                 .ifPresent(user -> {
@@ -65,6 +70,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 });
     }
 
+    /**
+     * refreshtoken 재발급, DB에 refreshtoken 업데이트
+     * @param user
+     * @return
+     */
     private String reIssueRefreshToken(User user) {
         String reIssueRefreshToken = jwtService.createRefreshToken();
         user.updateRefreshToken(reIssueRefreshToken);
@@ -72,6 +82,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return reIssueRefreshToken;
     }
 
+    /**
+     * Accesstoken 체크, 인증 처리
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("checkAccessTokenAndAuthentication() 호출");
         jwtService.extractAccessToken(request)
@@ -83,6 +101,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * 인증 허가
+     * @param user
+     */
     public void saveAuthentication(User user) {
         String password = user.getPassword();
         if (password == null) {

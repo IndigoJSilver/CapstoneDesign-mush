@@ -28,24 +28,24 @@ public class CommentService {
 
 
     @Transactional(readOnly = true)
-    public List<Comment> findAllCommentsInBoard(Long boardId) {
-        Board board = boardService.findById(boardId);
+    public List<Comment> findAllCommentsInBoard(Long articleId) {
+        Board board = boardService.findById(articleId);
         return commentRepository.findByBoard(board);
     }
 
     @Transactional(readOnly = true)
-    public Comment findCommentByUserAndBoard(Long userId, Long boardId) {
+    public Comment findCommentByUserAndBoard(Long userId, Long articleId) {
         User user = userService.findById(userId);
-        Board board = boardService.findById(boardId);
+        Board board = boardService.findById(articleId);
         return commentRepository.findByUserAndBoard(user, board)
                 .orElseThrow(() -> new NotFoundCommentException(String.format("댓글 없음")));
     }
 
     // 댓글 작성
     @Transactional
-    public Long writeComment(Long userId, Long boardId, CommentWriteDto commentWriteDto) {
+    public Long writeComment(Long userId, Long articleId, CommentWriteDto commentWriteDto) {
 
-        Board board = boardService.findById(boardId);
+        Board board = boardService.findById(articleId);
         User user = userService.findById(userId);
 
         Comment comment = Comment.builder()
@@ -57,7 +57,7 @@ public class CommentService {
         if (commentWriteDto.getParentId() != null) {
             Comment parent = commentRepository.findById(commentWriteDto.getParentId())
                     .orElseThrow(() -> new NotFoundCommentException("commentId 없음 " + commentWriteDto.getParentId()));
-            if (!parent.getBoard().getBoardId().equals(boardId) ) {
+            if (!parent.getBoard().getArticleId().equals(articleId) ) {
                 throw new NotFoundCommentException("해당 게시물에 댓글이 없습니다.");
             }
             comment.updateParent(parent);
@@ -70,15 +70,15 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public Long updateComment(Long userId, Long boardId, CommentWriteDto commentWriteDto) {
-        Comment comment = findCommentByUserAndBoard(userId, boardId);
+    public Long updateComment(Long userId, Long articleId, CommentWriteDto commentWriteDto) {
+        Comment comment = findCommentByUserAndBoard(userId, articleId);
         return comment.updateComment(commentWriteDto.getContent());
     }
 
     // 댓글 삭제
     @Transactional
-    public void deleteComment(Long userId, Long boardId) {
-        Comment comment = findCommentByUserAndBoard(userId, boardId);
+    public void deleteComment(Long userId, Long articleId) {
+        Comment comment = findCommentByUserAndBoard(userId, articleId);
         commentRepository.deleteById(comment.getCommentId());
     }
 

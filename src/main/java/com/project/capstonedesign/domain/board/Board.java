@@ -1,6 +1,7 @@
 package com.project.capstonedesign.domain.board;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.capstonedesign.domain.comment.Comment;
 import com.project.capstonedesign.domain.thumbsUp.ThumbsUp;
@@ -22,7 +23,7 @@ public class Board extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    private Long articleId;
 
     @Enumerated(EnumType.STRING)
     private Type type;
@@ -39,15 +40,18 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private String image;
 
+    @JsonIgnore
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
+    @JsonIgnore
     @JsonManagedReference
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
+    @JsonIgnore
     @JsonManagedReference
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ThumbsUp> thumbsUps;
@@ -69,6 +73,6 @@ public class Board extends BaseTimeEntity {
         this.type = type;
         this.title = title;
         this.content = content;
-        return this.getBoardId();
+        return this.getArticleId();
     }
 }

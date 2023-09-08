@@ -24,8 +24,8 @@ public class BoardService {
 
 
     @Transactional(readOnly = true)
-    public Board findById(Long boardId) {
-        return boardRepository.findById(boardId)
+    public Board findById(Long articleId) {
+        return boardRepository.findById(articleId)
                 .orElseThrow(() -> new NotFoundBoardException(String.format("Board is not found.")));
     }
 
@@ -57,20 +57,20 @@ public class BoardService {
                 .build();
         Board saveBoard = boardRepository.save(board);
         user.writeBoard(saveBoard);
-        return saveBoard.getBoardId();
+        return saveBoard.getArticleId();
     }
 
     @Transactional
-    public Long upadateBoard(Long userId, Long boardId, BoardWriteDto boardWriteDto) {
+    public Long upadateBoard(Long userId, Long articleId, BoardWriteDto boardWriteDto) {
         User user = userService.findById(userId);
-        Board board = findById(boardId);
+        Board board = findById(articleId);
         checkBoardLoginUser(user, board);
-        Long updatedBoardId = board.updateBoard(
+        Long updatedArticleId = board.updateBoard(
                 boardWriteDto.getType(),
                 boardWriteDto.getTitle(),
                 boardWriteDto.getContent()
         );
-        return updatedBoardId;
+        return updatedArticleId;
     }
 
     private void checkBoardLoginUser(User user, Board board) {
@@ -80,10 +80,10 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoard(Long userId, Long boardId) {
+    public void deleteBoard(Long userId, Long articleId) {
         User user = userService.findById(userId);
-        Board board = findById(boardId);
+        Board board = findById(articleId);
         checkBoardLoginUser(user, board);
-        boardRepository.deleteById(boardId);
+        boardRepository.deleteById(articleId);
     }
 }
