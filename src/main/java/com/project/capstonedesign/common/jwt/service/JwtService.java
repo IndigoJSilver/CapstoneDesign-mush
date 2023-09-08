@@ -43,6 +43,11 @@ public class JwtService {
 
     private final UserRepository userRepository;
 
+    /**
+     * Accesstoken 생성
+     * @param email
+     * @return
+     */
     public String createAccessToken(String email) {
         Date now = new Date();
         return JWT.create()
@@ -52,6 +57,10 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
+    /**
+     * Refreshtoken 생성
+     * @return
+     */
     public String createRefreshToken() {
         Date now = new Date();
         return JWT.create()
@@ -60,6 +69,11 @@ public class JwtService {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
+    /**
+     * Accesstoken Header에 넣어서 전송
+     * @param response
+     * @param accessToken
+     */
     public void sendAccessToken(HttpServletResponse response, String accessToken) {
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -67,6 +81,12 @@ public class JwtService {
         log.info("재발급 된 AccessToken: {}", accessToken);
     }
 
+    /**
+     * Accesstoken + Refreshtoken Header에 넣어서 전슝
+     * @param response
+     * @param accessToken
+     * @param refreshToken
+     */
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -75,17 +95,33 @@ public class JwtService {
         log.info("AccessToken, RefreshToken 헤더 설정 완료");
     }
 
+    /**
+     * Header애서 Refreshtoken 추출
+     * @param request
+     * @return
+     */
     public Optional<String> extractRefreshToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(refreshHeader))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
 
+    /**
+     * Header에서 Accesstoken 추출
+     * @param request
+     * @return
+     */
     public Optional<String> extractAccessToken(HttpServletRequest request) {
         return Optional.ofNullable(request.getHeader(accessHeader))
                 .filter(refreshToken -> refreshToken.startsWith(BEARER))
                 .map(refreshToken -> refreshToken.replace(BEARER, ""));
     }
+
+    /**
+     * Accesstoken에서 email 추출
+     * @param accessToken
+     * @return
+     */
     public Optional<String> extractEmail(String accessToken) {
         try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(secretKey))
@@ -99,14 +135,29 @@ public class JwtService {
         }
     }
 
+    /**
+     * Accesstoken Header 설정
+     * @param response
+     * @param accessToken
+     */
     public void setAccessTokenHeader(HttpServletResponse response, String accessToken) {
         response.setHeader(accessHeader, accessToken);
     }
 
+    /**
+     * Refreshtoken Header 설정
+     * @param response
+     * @param refreshToken
+     */
     public void setRefreshTokenHeader(HttpServletResponse response, String refreshToken) {
         response.setHeader(refreshHeader, refreshToken);
     }
 
+    /**
+     * Refreshtoken DB 저장
+     * @param email
+     * @param refreshToken
+     */
     public void updateRefreshToken(String email, String refreshToken) {
         userRepository.findByEmail(email)
                 .ifPresentOrElse(
@@ -115,6 +166,11 @@ public class JwtService {
                 );
     }
 
+    /**
+     * token 검증
+     * @param token
+     * @return
+     */
     public boolean isTokenValid(String token) {
         try {
             JWT.require(Algorithm.HMAC512(secretKey)).build().verify(token);
@@ -124,4 +180,8 @@ public class JwtService {
             return false;
         }
     }
+
+//    public Integer extractUserId() {
+//
+//    }
 }

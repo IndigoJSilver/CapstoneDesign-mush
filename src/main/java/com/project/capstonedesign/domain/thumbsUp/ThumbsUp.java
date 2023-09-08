@@ -1,5 +1,6 @@
 package com.project.capstonedesign.domain.thumbsUp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.capstonedesign.domain.board.Board;
 import com.project.capstonedesign.domain.comment.Comment;
 import com.project.capstonedesign.domain.user.User;
@@ -19,14 +20,17 @@ public class ThumbsUp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boardId")
+    @JoinColumn(name = "articleId")
     private Board board;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "commentId")
     private Comment comment;

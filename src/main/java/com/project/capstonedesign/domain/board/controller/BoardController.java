@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/boards")
+@RequestMapping("/api/boards")
 @RequiredArgsConstructor
 public class BoardController {
 
@@ -31,10 +31,10 @@ public class BoardController {
     }
 
     // 특정 게시글 조회
-    @GetMapping("/{boardId}")
-    public ApiResult<Board> findBoard(@PathVariable Long boardId) {
+    @GetMapping("/{articleId}")
+    public ApiResult<Board> findBoard(@PathVariable Long articleId) {
         try {
-            return ApiResult.success(boardService.findById(boardId));
+            return ApiResult.success(boardService.findById(articleId));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -64,10 +64,10 @@ public class BoardController {
     }
 
     // 게시글 수정
-    @PutMapping("/{userId}/{boardId}")
-    public ApiResult<Long> updateBoard(@PathVariable Long userId, @PathVariable Long boardId, @RequestBody BoardWriteDto boardWriteDto) {
+    @PutMapping("/edit/{userId}/{articleId}")
+    public ApiResult<Long> updateBoard(@PathVariable Long userId, @PathVariable Long articleId, @RequestBody BoardWriteDto boardWriteDto) {
         try {
-            return ApiResult.success(boardService.upadateBoard(userId, boardId, boardWriteDto));
+            return ApiResult.success(boardService.upadateBoard(userId, articleId, boardWriteDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -75,11 +75,11 @@ public class BoardController {
     }
 
     // 게시글 작성
-    @PostMapping("/{userId}")
+    @PostMapping("/post/{userId}")
     public ApiResult<Long> writeBoard(@PathVariable Long userId, @RequestBody BoardWriteDto boardWriteDto) {
         try {
-            Long boardId = boardService.writeBoard(userId, boardWriteDto);
-            return ApiResult.success(boardId);
+            Long articleId = boardService.writeBoard(userId, boardWriteDto);
+            return ApiResult.success(articleId);
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -87,8 +87,8 @@ public class BoardController {
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{userId}/{boardId}")
-    public void deleteBoard(@PathVariable Long userId, @PathVariable Long boardId) {
-        boardService.deleteBoard(userId, boardId);
+    @DeleteMapping("/delete/{userId}/{articleId}")
+    public void deleteBoard(@PathVariable Long userId, @PathVariable Long articleId) {
+        boardService.deleteBoard(userId, articleId);
     }
 }

@@ -1,6 +1,7 @@
 package com.project.capstonedesign.domain.comment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.project.capstonedesign.domain.board.Board;
 import com.project.capstonedesign.domain.thumbsUp.ThumbsUp;
@@ -26,26 +27,33 @@ public class Comment extends BaseTimeEntity {
 
     private String content;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parentId")
     private Comment parent;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> child = new ArrayList<>();
 
+
+    @JsonIgnore
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boardId")
+    @JoinColumn(name = "articleId")
     private Board board;
 
+    @JsonIgnore
     @Column(name = "parentId", insertable = false, updatable = false)
     private Long parentId;
 
+    @JsonIgnore
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
 
+    @JsonIgnore
     @JsonManagedReference
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ThumbsUp> thumbsUps = new ArrayList<>();

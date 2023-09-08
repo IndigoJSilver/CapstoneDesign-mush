@@ -33,14 +33,14 @@ public class LikeService {
         User user = userRepository.findById(likeDto.getUserId())
                 .orElseThrow(() -> new NotFoundUserException("userId 찾을 수 없음.: " + likeDto.getUserId()));
 
-        Board board = boardRepository.findById(likeDto.getBoardId())
-                .orElseThrow(() -> new NotFoundBoardException("boardId 찾을 수 없음.: " + likeDto.getBoardId()));
+        Board board = boardRepository.findById(likeDto.getArticleId())
+                .orElseThrow(() -> new NotFoundBoardException("articleId 찾을 수 없음.: " + likeDto.getArticleId()));
 
         Comment comment = commentRepository.findById(likeDto.getCommentId())
                 .orElseThrow(() -> new NotFoundCommentException("commentId 찾을 수 없음.: " + likeDto.getCommentId()));
 
         if (likeRepository.findByUserAndBoard(user, board).isPresent()) {
-            throw new DuplicateResourceException("이미 좋아요를 누른 게시물 입니다.: " + user.getUserId() + ", boardId: " + board.getBoardId());
+            throw new DuplicateResourceException("이미 좋아요를 누른 게시물 입니다.: " + user.getUserId() + ", articleId: " + board.getArticleId());
 
         }
 
@@ -63,8 +63,8 @@ public class LikeService {
         User user = userRepository.findById(likeDto.getUserId())
                 .orElseThrow(() -> new NotFoundUserException("userId 찾을 수 없음.: " + likeDto.getUserId()));
 
-        Board board = boardRepository.findById(likeDto.getBoardId())
-                .orElseThrow(() -> new NotFoundBoardException("boardId 찾을 수 없음.: " + likeDto.getBoardId()));
+        Board board = boardRepository.findById(likeDto.getArticleId())
+                .orElseThrow(() -> new NotFoundBoardException("articleId 찾을 수 없음.: " + likeDto.getArticleId()));
 
         Comment comment = commentRepository.findById(likeDto.getCommentId())
                 .orElseThrow(() -> new NotFoundCommentException("commentId 찾을 수 없음.: " + likeDto.getCommentId()));

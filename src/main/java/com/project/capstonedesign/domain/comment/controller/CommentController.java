@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/api/comments")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
     // 댓글 조회
-    @GetMapping("/{boardId}")
-    public ApiResult<List<CommentResponse>> findComment(@PathVariable Long boardId) {
+    @GetMapping("/{articleId}")
+    public ApiResult<List<CommentResponse>> findComment(@PathVariable Long articleId) {
         try {
-            return ApiResult.success(commentService.findAllCommentsInBoard(boardId).stream().map(CommentResponse::new).collect(Collectors.toList()));
+            return ApiResult.success(commentService.findAllCommentsInBoard(articleId).stream().map(CommentResponse::new).collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -33,10 +33,10 @@ public class CommentController {
     }
 
     // 댓글 등록
-    @PostMapping("/{userId}/{boardId}")
-    public ApiResult<Long> writeComment(@PathVariable Long userId, @PathVariable Long boardId, @RequestBody CommentWriteDto commentWriteDto) {
+    @PostMapping("/post/{userId}/{articleId}")
+    public ApiResult<Long> writeComment(@PathVariable Long userId, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
         try {
-            return ApiResult.success(commentService.writeComment(userId, boardId, commentWriteDto));
+            return ApiResult.success(commentService.writeComment(userId, articleId, commentWriteDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -44,10 +44,10 @@ public class CommentController {
     }
 
     // 댓글 수정
-    @PutMapping("/{userId}/{boardId}")
-    public ApiResult<Long> updateComment(@PathVariable Long userId, @PathVariable Long boardId, @RequestBody CommentWriteDto commentWriteDto) {
+    @PutMapping("/edit/{userId}/{articleId}")
+    public ApiResult<Long> updateComment(@PathVariable Long userId, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
         try {
-            return ApiResult.success(commentService.updateComment(userId, boardId, commentWriteDto));
+            return ApiResult.success(commentService.updateComment(userId, articleId, commentWriteDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -55,9 +55,9 @@ public class CommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/{userId}/{boardId}")
-    public void deleteComment(@PathVariable Long userId, @PathVariable Long boardId) {
-        commentService.deleteComment(userId, boardId);
+    @DeleteMapping("/delete/{userId}/{articleId}")
+    public void deleteComment(@PathVariable Long userId, @PathVariable Long articleId) {
+        commentService.deleteComment(userId, articleId);
     }
 
 
