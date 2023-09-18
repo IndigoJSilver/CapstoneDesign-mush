@@ -19,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * JWT 인증 필터
@@ -94,9 +95,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         log.info("checkAccessTokenAndAuthentication() 호출");
         jwtService.extractAccessToken(request)
                 .filter(jwtService::isTokenValid)
-                .ifPresent(accessToken -> jwtService.extractEmail(accessToken)
-                        .ifPresent(email -> userRepository.findByEmail(email)
-                                .ifPresent(this::saveAuthentication)));
+                .flatMap(jwtService::extractEmail)
+                .flatMap(email -> {
+                    System.out.println("email = " + email);
+                    Optional<User> byEmail = userRepository.findByEmail(email);
+                    System.out.println("byEmail.get() = " + byEmail.get());
+                    return byEmail;
+                })
+                .ifPresent(this::saveAuthentication);
 
         filterChain.doFilter(request, response);
     }
@@ -118,7 +124,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .build();
 
         Authentication authentication =
-                new UsernamePasswordAuthenticationToken(userDetails, null,
+                new UsernamePasswordAuthenticationToken(user, null,
                         authoritiesMapper.mapAuthorities(userDetails.getAuthorities()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);

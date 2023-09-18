@@ -2,16 +2,13 @@ package com.project.capstonedesign.domain.user.controller;
 
 import com.project.capstonedesign.common.jwt.service.JwtService;
 import com.project.capstonedesign.domain.user.User;
-import com.project.capstonedesign.domain.user.dto.UserLogoutReq;
-import com.project.capstonedesign.domain.user.dto.UserUpdatdDto;
-import com.project.capstonedesign.domain.user.service.UserService;
 import com.project.capstonedesign.domain.user.dto.UserSignUpDto;
-
+import com.project.capstonedesign.domain.user.dto.UserUpdatedDto;
+import com.project.capstonedesign.domain.user.service.UserService;
 import com.project.capstonedesign.domain.util.ApiResult;
-import lombok.Lombok;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +24,7 @@ public class UserController {
 
     /**
      * 자체 회원가입
+     *
      * @param userSignUpDto
      * @return
      * @throws Exception
@@ -39,6 +37,7 @@ public class UserController {
 
     /**
      * 특정 유저 조회
+     *
      * @param userId
      * @return
      */
@@ -54,6 +53,7 @@ public class UserController {
 
     /**
      * 모든 유저 조회
+     *
      * @return
      */
     @GetMapping()
@@ -68,14 +68,15 @@ public class UserController {
 
     /**
      * 유저 정보 변경
-     * @param userId
-     * @param userUpdatdDto
+     *
+     * @param
+     * @param userUpdatedDto
      * @return
      */
-    @PutMapping("/edit/{userId}")
-    public ApiResult<Long> updateUser(@PathVariable Long userId, @RequestBody UserUpdatdDto userUpdatdDto) {
+    @PutMapping("/edit")
+    public ApiResult<Long> updateUser(@AuthenticationPrincipal User user, @RequestBody UserUpdatedDto userUpdatedDto) {
         try {
-            return ApiResult.success(userService.updateUser(userId, userUpdatdDto));
+            return ApiResult.success(userService.updateUser(user.getUserId(), userUpdatedDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -84,36 +85,28 @@ public class UserController {
 
     /**
      * 회원 탈퇴
-     * @param userId
+     *
+     * @param
      */
-    @DeleteMapping("/withdraw/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+    @DeleteMapping("/withdraw")
+    public void deleteUser(@AuthenticationPrincipal User user) {
+        userService.deleteUser(user.getUserId());
     }
 
-//    @PostMapping("/autologin")
-//    public ApiResult<User> autoLogin(@RequestBody UserLogoutReq userLogoutReq) {
-//
-//        try {
-//            int userId = userLogoutReq.getUserId();
-//            int jwtId = jwtService.extractUserId();
-//        }
-//    }
-//
-//    @PostMapping("/logout")
-//    public ApiResult<String> logOut(@RequestBody UserLogoutReq userLogoutReq) {
-//
-//        try {
-//            int userId = userLogoutReq.getUserId();
-//            int jwtId = jwtService.extractUserId();
-//            if (userId!=jwtId) {
-//
-//            }
-//        }
-//    }
+    /**
+     * 로그아웃
+     * @param user
+     * @return
+     */
+    @PostMapping("/logout")
+    public ApiResult<String> logOut(@AuthenticationPrincipal User user) {
+        jwtService.extractUserId(user.getUserId());
+        return ApiResult.success("로그아웃");
+    }
 
     /**
      * jwt test
+     *
      * @return
      */
     @GetMapping("/test")

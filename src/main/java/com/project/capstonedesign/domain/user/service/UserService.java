@@ -2,7 +2,7 @@ package com.project.capstonedesign.domain.user.service;
 
 import com.project.capstonedesign.domain.user.Role;
 import com.project.capstonedesign.domain.user.User;
-import com.project.capstonedesign.domain.user.dto.UserUpdatdDto;
+import com.project.capstonedesign.domain.user.dto.UserUpdatedDto;
 import com.project.capstonedesign.domain.user.repository.UserRepository;
 import com.project.capstonedesign.domain.user.dto.UserSignUpDto;
 import com.project.capstonedesign.domain.user.exception.NotFoundUserException;
@@ -48,14 +48,14 @@ public class UserService {
      * @return
      */
     @org.springframework.transaction.annotation.Transactional
-    public Long updateUser(Long userId, UserUpdatdDto userUpdatdDto) {
+    public Long updateUser(Long userId, UserUpdatedDto userUpdatedDto) {
         User user = findById(userId);
         User update = user.updateUser(
-                userUpdatdDto.getName(),
-                userUpdatdDto.getPassword(),
-                userUpdatdDto.getNickname(),
-                userUpdatdDto.getCellphone(),
-                userUpdatdDto.getImageUrl()
+                userUpdatedDto.getName(),
+                userUpdatedDto.getPassword(),
+                userUpdatedDto.getNickname(),
+                userUpdatedDto.getCellphone(),
+                userUpdatedDto.getImageUrl()
         );
         return update.getUserId();
     }
