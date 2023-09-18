@@ -77,9 +77,12 @@ public class WebSecurityConfig {
                 .and()
 
                 .oauth2Login()
+                .redirectionEndpoint().baseUri("/api/users/oauth2/login")
+                .and()
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
                 .successHandler(oAuth2LoginSuccessHandler)
-                .failureHandler(oAuth2LoginFailureHandler)
-                .userInfoEndpoint().userService(customOAuth2UserService);
+                .failureHandler(oAuth2LoginFailureHandler);
 
         http.addFilterAfter(customUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), CustomUsernamePasswordAuthenticationFilter.class);

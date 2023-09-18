@@ -1,6 +1,7 @@
 package com.project.capstonedesign.common.login.handler;
 
 import com.project.capstonedesign.common.jwt.service.JwtService;
+import com.project.capstonedesign.domain.user.User;
 import com.project.capstonedesign.domain.user.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 
 @Slf4j
@@ -38,11 +40,12 @@ public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
-        userRepository.findByEmail(email)
-                .ifPresent(user -> {
-                    user.updateRefreshToken(refreshToken);
-                    userRepository.saveAndFlush(user);
-                });
+        Optional<User> userDetails = userRepository.findByEmail(email);
+
+        userDetails.ifPresent(user -> {
+            user.updateRefreshToken(refreshToken);
+            userRepository.saveAndFlush(user);
+        });
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
@@ -51,7 +54,15 @@ public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         jsonResponse.put("message", "로그인에 성공하였습니다.");
         jsonResponse.put("accessToken", accessToken);
         jsonResponse.put("refreshToken", refreshToken);
-        jsonResponse.put("email", email);
+
+        if (userDetails.isPresent()) {
+            User user = userDetails.get();
+            jsonResponse.put("userId", user.getUserId());
+            jsonResponse.put("image", user.getImageUrl());
+            jsonResponse.put("nickname", user.getNickname());
+            jsonResponse.put("email", user.getEmail());
+            jsonResponse.put("cellphone", user.getCellphone());
+        }
 
         try {
             response.getWriter().write(jsonResponse.toString());

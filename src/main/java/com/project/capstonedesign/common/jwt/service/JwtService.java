@@ -3,6 +3,8 @@ package com.project.capstonedesign.common.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.project.capstonedesign.common.jwt.util.PasswordUtil;
+import com.project.capstonedesign.domain.user.User;
 import com.project.capstonedesign.domain.user.repository.UserRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -181,7 +184,9 @@ public class JwtService {
         }
     }
 
-//    public Integer extractUserId() {
-//
-//    }
+    public void extractUserId(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.updateRefreshToken(PasswordUtil.generateRandomPassword());
+        userRepository.save(user);
+    }
 }

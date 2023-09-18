@@ -5,6 +5,7 @@ import static com.project.capstonedesign.common.oauth2.service.OauthProviderCons
 import java.util.Map;
 import java.util.UUID;
 
+import com.project.capstonedesign.common.jwt.util.PasswordUtil;
 import com.project.capstonedesign.common.oauth2.userinfo.KakaoOAuth2UserInfo;
 import com.project.capstonedesign.common.oauth2.userinfo.OAuth2UserInfo;
 import com.project.capstonedesign.domain.user.Role;
@@ -49,6 +50,9 @@ public class OAuthAttributes {
                 .email(UUID.randomUUID() + "@kakao.com")
                 .nickname(oAuth2UserInfo.getNickname())
                 .imageUrl(oAuth2UserInfo.getImageUrl())
+                .password(PasswordUtil.generateRandomPassword())
+                .name("-")
+                .cellphone("-")
                 .role(Role.GUEST)
                 .build();
     }
