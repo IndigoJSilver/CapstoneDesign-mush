@@ -4,9 +4,11 @@ import com.project.capstonedesign.domain.comment.Comment;
 import com.project.capstonedesign.domain.comment.dto.CommentResponse;
 import com.project.capstonedesign.domain.comment.dto.CommentWriteDto;
 import com.project.capstonedesign.domain.comment.service.CommentService;
+import com.project.capstonedesign.domain.user.User;
 import com.project.capstonedesign.domain.util.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,10 +35,10 @@ public class CommentController {
     }
 
     // 댓글 등록
-    @PostMapping("/post/{userId}/{articleId}")
-    public ApiResult<Long> writeComment(@PathVariable Long userId, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
+    @PostMapping("/post/{articleId}")
+    public ApiResult<Long> writeComment(@AuthenticationPrincipal User user, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
         try {
-            return ApiResult.success(commentService.writeComment(userId, articleId, commentWriteDto));
+            return ApiResult.success(commentService.writeComment(user.getUserId(), articleId, commentWriteDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -44,10 +46,10 @@ public class CommentController {
     }
 
     // 댓글 수정
-    @PutMapping("/edit/{userId}/{articleId}")
-    public ApiResult<Long> updateComment(@PathVariable Long userId, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
+    @PutMapping("/edit/{articleId}")
+    public ApiResult<Long> updateComment(@AuthenticationPrincipal User user, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
         try {
-            return ApiResult.success(commentService.updateComment(userId, articleId, commentWriteDto));
+            return ApiResult.success(commentService.updateComment(user.getUserId(), articleId, commentWriteDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -55,9 +57,10 @@ public class CommentController {
     }
 
     // 댓글 삭제
-    @DeleteMapping("/delete/{userId}/{articleId}")
-    public void deleteComment(@PathVariable Long userId, @PathVariable Long articleId) {
-        commentService.deleteComment(userId, articleId);
+    @DeleteMapping("/delete/{articleId}/{commentId}")
+    public  ApiResult<String> deleteComment(@AuthenticationPrincipal User user, @PathVariable Long articleId, @PathVariable Long commentId) {
+        commentService.deleteComment(user.getUserId(), articleId,commentId);
+        return ApiResult.success("삭제");
     }
 
 

@@ -23,9 +23,6 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final BoardService boardService;
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final BoardRepository boardRepository;
-
 
     @Transactional(readOnly = true)
     public List<Comment> findAllCommentsInBoard(Long articleId) {
@@ -34,10 +31,10 @@ public class CommentService {
     }
 
     @Transactional(readOnly = true)
-    public Comment findCommentByUserAndBoard(Long userId, Long articleId) {
+    public Comment findCommentByUserAndBoard(Long userId, Long articleId, Long commentId) {
         User user = userService.findById(userId);
         Board board = boardService.findById(articleId);
-        return commentRepository.findByUserAndBoard(user, board)
+        return commentRepository.findByUserAndBoardAndCommentId(user, board, commentId)
                 .orElseThrow(() -> new NotFoundCommentException(String.format("댓글 없음")));
     }
 
@@ -71,14 +68,14 @@ public class CommentService {
     // 댓글 수정
     @Transactional
     public Long updateComment(Long userId, Long articleId, CommentWriteDto commentWriteDto) {
-        Comment comment = findCommentByUserAndBoard(userId, articleId);
+        Comment comment = findCommentByUserAndBoard(userId, articleId, commentWriteDto.getCommentId());
         return comment.updateComment(commentWriteDto.getContent());
     }
 
     // 댓글 삭제
     @Transactional
-    public void deleteComment(Long userId, Long articleId) {
-        Comment comment = findCommentByUserAndBoard(userId, articleId);
+    public void deleteComment(Long userId, Long articleId, Long commentId) {
+        Comment comment = findCommentByUserAndBoard(userId, articleId, commentId);
         commentRepository.deleteById(comment.getCommentId());
     }
 
