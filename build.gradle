@@ -66,6 +66,13 @@ dependencies {
 	// 구글 이메일
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	//thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect')
+
+	// lombok
+	implementation 'org.projectlombok:lombok'
+
 }
 
 tasks.named('test') {
