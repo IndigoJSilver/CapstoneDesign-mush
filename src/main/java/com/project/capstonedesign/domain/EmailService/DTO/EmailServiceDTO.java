@@ -1,5 +1,6 @@
 package com.project.capstonedesign.domain.EmailService.DTO;
 
+import com.project.capstonedesign.domain.comment.Comment;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
