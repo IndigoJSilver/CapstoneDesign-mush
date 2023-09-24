@@ -71,6 +71,9 @@ dependencies {
 	implementation group: 'io.springfox', name: 'springfox-core', version: '2.9.2'
 	implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
 
+	// SMS
+	implementation 'net.nurigo:sdk:4.3.0'
+
 	//thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation('nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect')
