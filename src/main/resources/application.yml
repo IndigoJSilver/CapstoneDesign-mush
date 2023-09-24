@@ -27,6 +27,11 @@ spring:
             enable: true
           auth: true
 
+  coolsms:
+    api:
+      key: "NCSPAYDAARSXQEEM"
+      secret: "V2WOZWMVLCFSB8YTO5ICTQIDAKQXRV6C"
+
 
   security:
     oauth2:
