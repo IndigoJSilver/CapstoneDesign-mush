@@ -59,10 +59,7 @@ public class CommentController {
     // 댓글 삭제
     @DeleteMapping("/delete/{articleId}/{commentId}")
     public  ApiResult<String> deleteComment(@AuthenticationPrincipal User user, @PathVariable Long articleId, @PathVariable Long commentId) {
-        commentService.deleteComment(user.getUserId(), articleId,commentId);
+        commentService.deleteComment(user.getUserId(), articleId, commentId);
         return ApiResult.success("삭제");
     }
-
-
-
 }
