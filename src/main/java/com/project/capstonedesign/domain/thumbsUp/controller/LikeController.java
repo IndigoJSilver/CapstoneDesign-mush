@@ -18,12 +18,12 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @PostMapping
+    @PostMapping("/insert")
     public void insertLike(@RequestBody @Valid LikeDto likeDto) throws Exception {
         likeService.addLike(likeDto);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete")
     public void deleteLike(@RequestBody @Valid LikeDto likeDto) {
         likeService.deleteLike(likeDto);
     }

@@ -12,4 +12,5 @@ public interface LikeRepository extends JpaRepository<ThumbsUp, Long> {
 
     Optional<ThumbsUp> findByUserAndBoard(User user, Board board);
     Optional<ThumbsUp> findByUserAndComment(User user, Comment comment);
+    Long countByBoard(Board board);
 }
