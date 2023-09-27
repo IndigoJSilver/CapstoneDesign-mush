@@ -1,6 +1,8 @@
 package com.project.capstonedesign.domain.board.service;
 
+import com.project.capstonedesign.common.service.S3Uploader;
 import com.project.capstonedesign.domain.board.Board;
+import com.project.capstonedesign.domain.board.Sort;
 import com.project.capstonedesign.domain.board.Type;
 import com.project.capstonedesign.domain.board.dto.BoardWriteDto;
 import com.project.capstonedesign.domain.board.exception.NotFoundBoardException;
@@ -9,9 +11,12 @@ import com.project.capstonedesign.domain.board.repository.BoardRepository;
 import com.project.capstonedesign.domain.user.User;
 import com.project.capstonedesign.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +26,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserService userService;
-
+    private final S3Uploader s3Uploader;
 
     @Transactional(readOnly = true)
     public Board findById(Long articleId) {
@@ -46,13 +51,22 @@ public class BoardService {
     }
 
     @Transactional
-    public Long writeBoard(Long userId, BoardWriteDto boardWriteDto) {
+    public Long writeBoard(Long userId, BoardWriteDto boardWriteDto, MultipartFile image) {
         User user = userService.findById(userId);
+        String imagePath = null;
+        if (!image.isEmpty()) {
+            try {
+                imagePath = s3Uploader.upload(image, "board");
+            } catch (IOException e) {
+                throw new IllegalArgumentException("이미지 업로드 실패");
+            }
+        }
+
         Board board = Board.builder()
                 .type(boardWriteDto.getType())
                 .title(boardWriteDto.getTitle())
                 .content(boardWriteDto.getContent())
-                .image("")
+                .image(imagePath)
                 .status("")
                 .build();
         Board saveBoard = boardRepository.save(board);
@@ -85,5 +99,16 @@ public class BoardService {
         Board board = findById(articleId);
         checkBoardLoginUser(user, board);
         boardRepository.deleteById(articleId);
+    }
+
+    public List<Board> searchBoard(String keyword) {
+        return boardRepository.findByTitleContaining(keyword);
+    }
+
+    public List<Board> sortBoard(Sort sort, int limit) {
+        if (sort.equals(Sort.UPDATE_DATE)) {
+            return boardRepository.findSortByUpdate(PageRequest.of(0, limit));
+        }
+        return boardRepository.findSortByLikeCount(PageRequest.of(0, limit));
     }
 }

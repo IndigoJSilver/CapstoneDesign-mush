@@ -20,7 +20,6 @@ spring:
     username: {username}
     password: {password}
 
-
   security:
     oauth2:
       client:
@@ -54,3 +53,16 @@ jwt:
     header: refreshToken
 server:
   port: 1000
+
+
+cloud:
+  aws:
+    credentials:
+      access-key: {S3AccessKey}
+      secret-key: 
+    s3:
+      bucket: {bucket}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
