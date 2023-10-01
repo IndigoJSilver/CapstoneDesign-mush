@@ -18,6 +18,7 @@ import java.util.List;
 public class Mushroom extends BaseTimeEntity {
 
     @Id
+    @Column(name = "mushId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mushId;
 
@@ -25,28 +26,36 @@ public class Mushroom extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private String info;
+    private String feature;
 
     @Column(nullable = false)
-    private Long rareItem;
+    private Long rarity;
 
     @Enumerated(EnumType.STRING)
     private WhichMush whichMush;
 
     @Column(nullable = false)
-    private String fileUrl;
+    private String image;
+
+    @Column(nullable = false)
+    private int picNum; // 도감번호
+
+    @Column(nullable = false)
+    private String isCatched; // 포획여부
 
     @JsonManagedReference
     @OneToMany(mappedBy = "mushroom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Observe> observes = new ArrayList<>();
 
     @Builder
-    public Mushroom(String name, String info, Long rareItem, WhichMush whichMush, String fileUrl) {
+    public Mushroom(String name, String feature, Long rarity, WhichMush whichMush, String image, int picNum, String isCatched) {
         this.name = name;
-        this.info = info;
-        this.rareItem = rareItem;
+        this.feature = feature;
+        this.rarity = rarity;
         this.whichMush = whichMush;
-        this.fileUrl = fileUrl;
+        this.image = image;
+        this.picNum = picNum;
+        this.isCatched = isCatched;
     }
 
 }

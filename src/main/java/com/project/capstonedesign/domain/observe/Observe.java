@@ -17,14 +17,18 @@ import javax.persistence.*;
 public class Observe extends BaseTimeEntity {
 
     @Id
+    @Column(name = "observeId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long observeId;
 
     @Column(nullable = false)
-    private String locate;
+    private Double lng; // 경도
 
     @Column(nullable = false)
-    private String fileUrl;
+    private Double lat; // 위도
+
+    @Column(nullable = false)
+    private String image;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,8 +41,9 @@ public class Observe extends BaseTimeEntity {
     private Mushroom mushroom;
 
     @Builder
-    public void Observe(String locate, String fileUrl) {
-        this.locate = locate;
-        this.fileUrl = fileUrl;
+    public Observe(Double lng, Double lat, String image) {
+        this.lng = lng;
+        this.lat = lat;
+        this.image= image;
     }
 }
