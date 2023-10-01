@@ -48,13 +48,18 @@ public class UserService {
      * @return
      */
     @org.springframework.transaction.annotation.Transactional
-    public Long updateUser(Long userId, UserUpdatedDto userUpdatedDto) {
+    public Long updateNickname(Long userId, UserUpdatedDto userUpdatedDto) {
         User user = findById(userId);
-        User update = user.updateUser(
-                userUpdatedDto.getName(),
-                userUpdatedDto.getPassword(),
-                userUpdatedDto.getNickname(),
-                userUpdatedDto.getCellphone(),
+        User update = user.updateNickname(
+                userUpdatedDto.getNickname()
+        );
+        return update.getUserId();
+    }
+
+    @org.springframework.transaction.annotation.Transactional
+    public Long updateImageUrl(Long userId, UserUpdatedDto userUpdatedDto) {
+        User user = findById(userId);
+        User update = user.updateImageUrl(
                 userUpdatedDto.getImageUrl()
         );
         return update.getUserId();

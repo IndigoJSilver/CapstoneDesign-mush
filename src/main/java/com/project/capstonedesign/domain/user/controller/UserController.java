@@ -66,17 +66,22 @@ public class UserController {
         }
     }
 
-    /**
-     * 유저 정보 변경
-     *
-     * @param
-     * @param userUpdatedDto
-     * @return
-     */
-    @PutMapping("/edit")
-    public ApiResult<Long> updateUser(@AuthenticationPrincipal User user, @RequestBody UserUpdatedDto userUpdatedDto) {
+    // 닉네임 변경
+    @PatchMapping("/edit/nickname")
+    public ApiResult<Long> updateNickname(@AuthenticationPrincipal User user, @RequestBody UserUpdatedDto userUpdatedDto) {
         try {
-            return ApiResult.success(userService.updateUser(user.getUserId(), userUpdatedDto));
+            return ApiResult.success(userService.updateNickname(user.getUserId(), userUpdatedDto));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return ApiResult.fail(e.getMessage());
+        }
+    }
+
+    // 프로필 이미지 변경
+    @PatchMapping("/edit/profile-image")
+    public ApiResult<Long> updateProfile(@AuthenticationPrincipal User user, @RequestBody UserUpdatedDto userUpdatedDto) {
+        try {
+            return ApiResult.success(userService.updateImageUrl(user.getUserId(), userUpdatedDto));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
