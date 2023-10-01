@@ -70,7 +70,7 @@ public class BoardController {
     }
 
     // 게시글 수정
-    @PutMapping("/edit/{articleId}")
+    @PatchMapping("/edit/{articleId}")
     public ApiResult<Long> updateBoard(@AuthenticationPrincipal User user, @PathVariable Long articleId, @RequestBody BoardWriteDto boardWriteDto) {
         try {
             return ApiResult.success(boardService.upadateBoard(user.getUserId(), articleId, boardWriteDto));

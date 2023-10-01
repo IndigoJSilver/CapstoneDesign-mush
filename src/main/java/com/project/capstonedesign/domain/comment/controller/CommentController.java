@@ -46,7 +46,7 @@ public class CommentController {
     }
 
     // 댓글 수정
-    @PutMapping("/edit/{articleId}")
+    @PatchMapping("/edit/{articleId}")
     public ApiResult<Long> updateComment(@AuthenticationPrincipal User user, @PathVariable Long articleId, @RequestBody CommentWriteDto commentWriteDto) {
         try {
             return ApiResult.success(commentService.updateComment(user.getUserId(), articleId, commentWriteDto));
