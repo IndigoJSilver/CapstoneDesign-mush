@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Mushroom extends BaseTimeEntity {
-
     @Id
     @Column(name = "mushId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +24,7 @@ public class Mushroom extends BaseTimeEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 4000)
     private String feature;
 
     @Column(nullable = false)
@@ -34,28 +33,28 @@ public class Mushroom extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private WhichMush whichMush;
 
-    @Column(nullable = false)
+    @Column(nullable = false,length = 1000)
     private String image;
 
     @Column(nullable = false)
-    private int picNum; // 도감번호
-
-    @Column(nullable = false)
-    private String isCatched; // 포획여부
+    private String isCatched;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "mushroom", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Observe> observes = new ArrayList<>();
 
     @Builder
-    public Mushroom(String name, String feature, Long rarity, WhichMush whichMush, String image, int picNum, String isCatched) {
+    public Mushroom(Long mushId,String name, String feature, Long rarity, WhichMush whichMush, String image, String isCatched) {
+        this.mushId = mushId;
         this.name = name;
         this.feature = feature;
         this.rarity = rarity;
         this.whichMush = whichMush;
         this.image = image;
-        this.picNum = picNum;
         this.isCatched = isCatched;
     }
 
+    public void updateIsCatch() {
+        this.isCatched = "true";
+    }
 }

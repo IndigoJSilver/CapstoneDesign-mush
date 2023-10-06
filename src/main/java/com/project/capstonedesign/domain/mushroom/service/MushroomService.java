@@ -18,7 +18,7 @@ public class MushroomService {
     private final MushroomRepository mushroomRepository;
 
     @Transactional(readOnly = true)
-    public Mushroom findById(Long mushId, MushroomResponse mushroomResponse) {
+    public Mushroom findById(Long mushId) {
         return mushroomRepository.findById(mushId)
                 .orElseThrow(() -> new NotFoundMushroomException(String.format("Mushroom is not found.")));
     }
@@ -27,4 +27,13 @@ public class MushroomService {
     public List<Mushroom> findAll() {
         return mushroomRepository.findAll();
     }
+
+
+    @Transactional
+    public void updateIsCatch(Long mushId) {
+        Mushroom findMush = findById(mushId);
+        findMush.updateIsCatch();
+        mushroomRepository.save(findMush);
+    }
+
 }

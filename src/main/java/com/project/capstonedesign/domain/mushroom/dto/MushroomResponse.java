@@ -11,24 +11,22 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MushroomResponse {
 
-    //private Long mushId;
+    private Long mushId;
     private String name;
     private String feature;
     private Long rarity;
     private WhichMush whichMush;
     private String image;
-    private int picNum;
     private String isCatched;
 
-    private static MushroomResponse of(Mushroom mushroom) {
+    public static MushroomResponse of(Mushroom mushroom) {
         return new MushroomResponse(
-                //mushroom.getMushId(),
+                mushroom.getMushId(),
                 mushroom.getName(),
                 mushroom.getFeature(),
                 mushroom.getRarity(),
                 mushroom.getWhichMush(),
                 mushroom.getImage(),
-                mushroom.getPicNum(),
                 mushroom.getIsCatched()
         );
     }

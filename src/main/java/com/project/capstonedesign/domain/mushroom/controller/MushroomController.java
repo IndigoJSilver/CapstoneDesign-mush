@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -20,9 +21,9 @@ public class MushroomController {
 
     // 전체 버섯 목록 조회
     @GetMapping()
-    public ApiResult<List<Mushroom>> findAllMushroom() {
+    public ApiResult<List<MushroomResponse>> findAllMushroom() {
         try {
-            return ApiResult.success(mushroomService.findAll());
+            return ApiResult.success(mushroomService.findAll().stream().map(MushroomResponse::of).collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -31,9 +32,9 @@ public class MushroomController {
 
     // 특정 버섯 조회
     @GetMapping("/{mushId}")
-    public ApiResult<Mushroom> findMushroom(@PathVariable Long mushId, @RequestBody MushroomResponse mushroomResponse) {
+    public ApiResult<MushroomResponse> findMushroom(@PathVariable Long mushId) {
         try {
-            return ApiResult.success(mushroomService.findById(mushId, mushroomResponse));
+            return ApiResult.success(MushroomResponse.of(mushroomService.findById(mushId)));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
