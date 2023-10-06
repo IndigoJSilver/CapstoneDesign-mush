@@ -1,8 +1,10 @@
 package com.project.capstonedesign.domain.observe.service;
 
 import com.project.capstonedesign.common.service.S3Uploader;
+import com.project.capstonedesign.domain.mushroom.Mushroom;
+import com.project.capstonedesign.domain.mushroom.service.MushroomService;
 import com.project.capstonedesign.domain.observe.Observe;
-import com.project.capstonedesign.domain.observe.dto.ObserveResponse;
+import com.project.capstonedesign.domain.observe.controller.ObserveRequest;
 import com.project.capstonedesign.domain.observe.repository.ObserveRepository;
 import com.project.capstonedesign.domain.user.User;
 import com.project.capstonedesign.domain.user.service.UserService;
@@ -18,11 +20,12 @@ import java.io.IOException;
 public class ObserveService {
 
     private final ObserveRepository observeRepository;
+    private final MushroomService mushroomService;
     private final UserService userService;
     private final S3Uploader s3Uploader;
 
     @Transactional
-    public Long saveMushroom(Long userId, ObserveResponse observeResponse, MultipartFile image) {
+    public Long saveMushroom(Long userId, ObserveRequest observeRequest, MultipartFile image) {
         User user = userService.findById(userId);
         String imagePath = null;
         if(!image.isEmpty()) {
@@ -33,13 +36,17 @@ public class ObserveService {
             }
         }
 
+        Mushroom findMush = mushroomService.findById(observeRequest.getMushId());
         Observe observe = Observe.builder()
-                .lng(observeResponse.getLng())
-                .lat(observeResponse.getLat())
+                .user(user)
+                .mushroom(findMush)
+                .lng(observeRequest.getLng())
+                .lat(observeRequest.getLat())
                 .image(imagePath)
                 .build();
 
         Observe saveObserve = observeRepository.save(observe);
+        mushroomService.updateIsCatch(observeRequest.getMushId());
         return saveObserve.getObserveId();
     }
 }

@@ -41,7 +41,9 @@ public class Observe extends BaseTimeEntity {
     private Mushroom mushroom;
 
     @Builder
-    public Observe(Double lng, Double lat, String image) {
+    public Observe(User user,Mushroom mushroom,Double lng, Double lat, String image) {
+        this.user = user;
+        this.mushroom = mushroom;
         this.lng = lng;
         this.lat = lat;
         this.image= image;

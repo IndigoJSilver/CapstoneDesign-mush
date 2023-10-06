@@ -7,10 +7,7 @@ import com.project.capstonedesign.domain.util.ApiResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -21,10 +18,11 @@ public class ObserveController {
 
     private final ObserveService observeService;
 
+    // 발견한 버섯 사진 정보 저장
     @PostMapping("/save")
-    public ApiResult<Long> saveObserve(@AuthenticationPrincipal User user, @RequestPart("data") ObserveResponse observeResponse, @RequestPart(value = "image") MultipartFile image) {
+    public ApiResult<Long> saveObserve(@AuthenticationPrincipal User user, @RequestPart("data") ObserveRequest observeRequest, @RequestPart(value = "image") MultipartFile image) {
         try {
-            Long observeId = observeService.saveMushroom(user.getUserId(), observeResponse, image);
+            Long observeId = observeService.saveMushroom(user.getUserId(), observeRequest, image);
             return ApiResult.success(observeId);
         } catch (Exception e) {
             log.error(e.getMessage());
