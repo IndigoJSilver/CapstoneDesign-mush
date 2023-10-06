@@ -38,7 +38,7 @@ public class Board extends BaseTimeEntity {
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String image;
 
     @JsonIgnore

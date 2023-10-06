@@ -54,7 +54,7 @@ public class BoardService {
     public Long writeBoard(Long userId, BoardWriteDto boardWriteDto, MultipartFile image) {
         User user = userService.findById(userId);
         String imagePath = null;
-        if (!image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             try {
                 imagePath = s3Uploader.upload(image, "board");
             } catch (IOException e) {

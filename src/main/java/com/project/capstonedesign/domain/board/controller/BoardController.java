@@ -27,9 +27,9 @@ public class BoardController {
 
     // 전체 게시글 조회
     @GetMapping()
-    public ApiResult<List<Board>> findAllBoard() {
+    public ApiResult<List<BoardResponse>> findAllBoard() {
         try {
-            return ApiResult.success(boardService.findAll());
+            return ApiResult.success(boardService.findAll().stream().map(BoardResponse::of).collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -38,9 +38,9 @@ public class BoardController {
 
     // 특정 게시글 조회
     @GetMapping("/{articleId}")
-    public ApiResult<Board> findBoard(@PathVariable Long articleId) {
+    public ApiResult<BoardResponse> findBoard(@PathVariable Long articleId) {
         try {
-            return ApiResult.success(boardService.findById(articleId));
+            return ApiResult.success(BoardResponse.of(boardService.findById(articleId)));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -49,9 +49,9 @@ public class BoardController {
 
     // 게시판 별 게시글 조회
     @GetMapping("/type/{type}")
-    public ApiResult<List<Board>> findByType(@PathVariable Type type) {
+    public ApiResult<List<BoardResponse>> findByType(@PathVariable Type type) {
         try {
-            return ApiResult.success(boardService.findByType(type));
+            return ApiResult.success(boardService.findByType(type).stream().map(BoardResponse::of).collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -60,9 +60,9 @@ public class BoardController {
 
     // 회원이 작성한 모든 게시글 조회
     @GetMapping("/users")
-    public ApiResult<List<Board>> findByUserId(@AuthenticationPrincipal User user) {
+    public ApiResult<List<BoardResponse>> findByUserId(@AuthenticationPrincipal User user) {
         try {
-            return ApiResult.success(boardService.findByUser(user.getUserId()));
+            return ApiResult.success(boardService.findByUser(user.getUserId()).stream().map(BoardResponse::of).collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -83,12 +83,12 @@ public class BoardController {
     // 게시글 작성
     @PostMapping("/post")
     public ApiResult<Long> writeBoard(@AuthenticationPrincipal User user, @RequestPart("data") BoardWriteDto boardWriteDto,
-                                      @RequestPart(value = "image") MultipartFile image) {
+                                      @RequestPart(value = "image",required = false) MultipartFile image) {
         try {
             Long articleId = boardService.writeBoard(user.getUserId(), boardWriteDto, image);
             return ApiResult.success(articleId);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("error", e);
             return ApiResult.fail(e.getMessage());
         }
     }
