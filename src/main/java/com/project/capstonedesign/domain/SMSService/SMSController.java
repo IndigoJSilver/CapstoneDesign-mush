@@ -1,21 +1,21 @@
 package com.project.capstonedesign.domain.SMSService;
 
+import com.project.capstonedesign.domain.EmailService.Service.EmailService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Random;
 
 @RestController
 @RequiredArgsConstructor
 public class SMSController {
 
-    @GetMapping("/check/sendSMS")
-    public @ResponseBody
-    String sendSMS(String phoneNumber) {
+    private final SMSUtil smsUtil;
 
-        UserService smsService = new UserService();
+    @PostMapping("/check/sendSMS")
+    public String sendSMS(@RequestBody UserPhoneDto userPhoneDto) {
 
         Random rand  = new Random();
         String numStr = "";
@@ -24,9 +24,18 @@ public class SMSController {
             numStr+=ran;
         }
 
+        String phoneNumber = userPhoneDto.getPhoneNum();
+
         System.out.println("수신자 번호 : " + phoneNumber);
         System.out.println("인증번호 : " + numStr);
-//        smsService.certifiedPhoneNumber(phoneNumber,numStr);
+        smsUtil.sendOne(phoneNumber,numStr);
         return numStr;
+    }
+
+    @Data
+    public static class UserPhoneDto {
+
+        @NotEmpty(message = "휴대번호을 입력해주세요")
+        public String phoneNum;
     }
 }
