@@ -1,11 +1,11 @@
 package com.project.capstonedesign.domain.SMSService;
 
-import com.project.capstonedesign.domain.EmailService.Service.EmailService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotEmpty;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.Random;
 
 @RestController

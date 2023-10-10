@@ -28,6 +28,7 @@ public class SMSUtil {
     public SingleMessageSentResponse sendOne(String to, String verificationCode) {
         Message message = new Message();
         // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+
         message.setFrom("01050178063");
         message.setTo(to);
         message.setText("[버섯모야] 인증번호를 입력해주세요\n" + verificationCode);
