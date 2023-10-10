@@ -18,8 +18,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: seongyun8063@gmail.com # 앱 비밀번호 발급받은 google 계정
-    password: rlaqjfsgajpgafvb # 발급받은 앱 비밀번호 (16자리 입니다.) -> 복붙
+    username: seongyun8063@gmail.com
+    password: rlaqjfsgajpgafvb
     properties:
       mail:
         smtp:
