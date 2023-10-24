@@ -56,7 +56,7 @@ public class UserService {
         return update.getUserId();
     }
 
-    @org.springframework.transaction.annotation.Transactional
+    @Transactional
     public Long updateImageUrl(Long userId, UserUpdatedDto userUpdatedDto) {
         User user = findById(userId);
         User update = user.updateImageUrl(

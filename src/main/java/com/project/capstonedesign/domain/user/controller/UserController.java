@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -42,9 +43,9 @@ public class UserController {
      * @return
      */
     @GetMapping("/{userId}")
-    public ApiResult<User> findUser(@PathVariable Long userId) {
+    public ApiResult<UserResponse> findUser(@PathVariable Long userId) {
         try {
-            return ApiResult.success(userService.findById(userId));
+            return ApiResult.success(UserResponse.of(userService.findById(userId)));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
@@ -56,10 +57,10 @@ public class UserController {
      *
      * @return
      */
-    @GetMapping()
-    public ApiResult<List<User>> findAllUser() {
+    @GetMapping
+    public ApiResult<List<UserResponse>> findAllUser() {
         try {
-            return ApiResult.success(userService.findAll());
+            return ApiResult.success(userService.findAll().stream().map(UserResponse::of).collect(Collectors.toList()));
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResult.fail(e.getMessage());
