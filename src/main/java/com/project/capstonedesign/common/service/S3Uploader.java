@@ -32,7 +32,7 @@ public class S3Uploader {
 
     public String upload(MultipartFile uploadFile, String dirName) throws IOException {
         InputStream inputStream = uploadFile.getInputStream();
-        String fileName = dirName + "/" + uploadFile.getName();
+        String fileName = dirName + "/" + uploadFile.getOriginalFilename();
         return putS3(inputStream, fileName);
     }
 
