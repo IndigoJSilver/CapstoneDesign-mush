@@ -23,15 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeService {
 
     private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
 
     @Transactional
-    public void addLike(LikeDto likeDto) {
-
-        User user = userRepository.findById(likeDto.getUserId())
-                .orElseThrow(() -> new NotFoundUserException("userId 찾을 수 없음.: " + likeDto.getUserId()));
+    public void addLike(LikeDto likeDto, User user) {
 
         if (likeDto.getArticleId() != null && likeDto.getCommentId() != null) {
             throw new IllegalArgumentException("articleId와 commentId 둘 다 존재할 수 없음.");
@@ -68,10 +64,7 @@ public class LikeService {
     }
 
     @Transactional
-    public void deleteLike(LikeDto likeDto) {
-
-        User user = userRepository.findById(likeDto.getUserId())
-                .orElseThrow(() -> new NotFoundUserException("userId 찾을 수 없음.: " + likeDto.getUserId()));
+    public void deleteLike(LikeDto likeDto, User user) {
 
         if (likeDto.getArticleId() != null && likeDto.getCommentId() != null) {
             throw new IllegalArgumentException("articleId와 commentId 둘 다 존재할 수 없음.");
