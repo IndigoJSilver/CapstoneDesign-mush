@@ -101,4 +101,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    /**
+     * email로 회원 조회
+     * @param email
+     * @return
+     */
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundUserException(String.format("There is no ID: %s", email)));
+    }
+
 }
