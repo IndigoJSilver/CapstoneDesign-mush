@@ -14,8 +14,8 @@ import java.io.UnsupportedEncodingException;
 public class FindIDController {
     private final FindIDService findIDService;
 
-    @PostMapping("login/findId")
-    public String FindPassword(@RequestParam("cellphone") String cellphone) throws MessagingException, UnsupportedEncodingException {
+    @PostMapping("login/FindId")
+    public String FindId(@RequestParam("cellphone") String cellphone) throws MessagingException, UnsupportedEncodingException {
 
         String userEmail = findIDService.FindID(cellphone);
 
