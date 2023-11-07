@@ -1,5 +1,6 @@
-package com.project.capstonedesign.domain.SMSService;
+package com.project.capstonedesign.domain.SMSService.Controller;
 
+import com.project.capstonedesign.domain.SMSService.Service.SMSUtil;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

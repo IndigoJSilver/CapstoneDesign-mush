@@ -1,4 +1,4 @@
-package com.project.capstonedesign.domain.SMSService;
+package com.project.capstonedesign.domain.SMSService.Service;
 
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
