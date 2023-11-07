@@ -15,17 +15,10 @@ public class EmailController {
 
     private final EmailService emailService;
 
-    @PostMapping("login/mailConfirm")
-    public String mailConfirm(@RequestBody EmailAuthRequestDto emailDto) throws MessagingException, UnsupportedEncodingException {
+    @PostMapping("login/sendEmail")
+    public String mailConfirm(@RequestParam("email") String email) throws MessagingException, UnsupportedEncodingException {
 
-        String authCode = emailService.sendEmail(emailDto.getEmail());
+        String authCode = emailService.sendEmail(email);
         return authCode;
-    }
-
-    @Data
-    public static class EmailAuthRequestDto {
-
-        @NotEmpty(message = "이메일을 입력해주세요")
-        public String email;
     }
 }

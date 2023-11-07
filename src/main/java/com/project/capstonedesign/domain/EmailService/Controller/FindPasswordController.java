@@ -6,13 +6,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
+
 @RestController
 @RequiredArgsConstructor
 public class FindPasswordController {
     private final FindPasswordService findPasswordService;
 
-    @PostMapping("login/FindPassword")
-    public String mailConfirm(@RequestParam("email") String userEmail) {
+    @PostMapping("login/findPassword")
+    public String FindPassword(@RequestParam("email") String userEmail) throws MessagingException, UnsupportedEncodingException {
 
         String password = findPasswordService.FindPassword(userEmail);
 
